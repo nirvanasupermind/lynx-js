@@ -1,6 +1,6 @@
 {
   "name": "lynx-js",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Numerical analysis and number theory library for JavaScript",
   "main": "src/lynx.js",
   "scripts": {
