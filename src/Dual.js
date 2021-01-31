@@ -90,6 +90,5 @@ Dual.prototype.plus = Dual.prototype.add;
 Dual.prototype.minus = Dual.prototype.sub;
 Dual.prototype.times = Dual.prototype.multiply = Dual.prototype.mul;
 Dual.prototype.divide = Dual.prototype.div;
-Dual.prototype.modular = Dual.prototype.mod;
 
 module.exports = Dual;

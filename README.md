@@ -7,8 +7,21 @@
 
 lynx has no run-time dependencies. The lynx module is designed to be able to be run from Node.JS.
 
+# Load
+
+This library is available in Node from the npm registry
+
+    $ npm install lynx-js
+
+And you can import it like this:
+
+```js
+var lynx = require("lynx-js")
+```
+
+
 # API
-WiP
+See [API.md](API.md).
 
 # License
 lynx is licensed under the MIT License.
