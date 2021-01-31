@@ -1,0 +1,34 @@
+{
+  "name": "lynx-js",
+  "version": "0.1.0",
+  "description": "Numerical analysis and number theory library for JavaScript",
+  "main": "src/lynx.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nirvanasupermind/lynx-js.git"
+  },
+  "keywords": [
+    "ndarray",
+    "array",
+    "matrix",
+    "vector",
+    "multi",
+    "multidimensional",
+    "dimension",
+    "dual",
+    "dual-number",
+    "numpy",
+    "math",
+    "numerical-analysis",
+    "number-theory"
+  ],
+  "author": "nirvanasupermind",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nirvanasupermind/lynx-js/issues"
+  },
+  "homepage": "https://github.com/nirvanasupermind/lynx-js#readme"
+}

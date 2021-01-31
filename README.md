@@ -1,4 +1,5 @@
 # lynx-js
+[![npm version](https://badge.fury.io/js/lynx-js.svg)](https://badge.fury.io/js/lynx-js)
 **lynx** is a package for numerical analysis and number theory in JavaScript. It contains among other things:
 * Creation and manipulation of nD tensors
 * Manipulation of [dual numbers](https://mathworld.wolfram.com/DualNumber.html)
