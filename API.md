@@ -1,47 +1,66 @@
 (WiP)
-# Table of Contents
-- [Class NdArray](#classndarray)
-    - [NdArray.prototype.add(that)](#ndarrayprototypeaddthat)
-    - [NdArray.prototype.constructor(value)](#ndarrayprototypeconstructorvalue)
-    - [NdArray.prototype.div(that)](#ndarrayprototypedivthat)
-    - [NdArray.prototype.divide(that)](#ndarrayprototypedividethat)
-    - [NdArray.prototype.dot(that)](#ndarrayprototypedotthat)
-    - [NdArray.prototype.get(...n)](#ndarrayprototypegetn)
-    - [NdArray.prototype.max()](#ndarrayprototypemax)
-    - [NdArray.prototype.min()](#ndarrayprototypemin)
-    - [NdArray.prototype.minus(that)](#ndarrayprototypeminusthat)
-    - [NdArray.prototype.mod(that)](#ndarrayprototypemodthat)
-    - [NdArray.prototype.modular(that)](#ndarrayprototypemodularthat)
-    - [NdArray.prototype.mul(that)](#ndarrayprototypemulthat)
-    - [NdArray.prototype.multiply(that)](#ndarrayprototypemultiplythat)
-    - [NdArray.prototype.ndim()](#ndarrayprototypendim)
-    - [NdArray.prototype.plus(that)](#ndarrayprototypeplusthat)
-    - [NdArray.prototype.set(...m)](#ndarrayprototypesetm)
-    - [NdArray.prototype.shape()](#ndarrayprototypeshape)
-    - [NdArray.prototype.sub(that)](#ndarrayprototypesubthat)
-    - [NdArray.prototype.times(that)](#ndarrayprototypetimesthat)
-    - [NdArray.prototype.toString()](#ndarrayprototypetostring)
-    - [NdArray.prototype.tolist()](#ndarrayprototypetolist)
-- [Class "Dual"]
-    - [Dual.prototype.add(that)](#dualprototypeaddthat)
-    - [Dual.prototype.constructor(a,b=0)](#dualprototypeconstructorab0)
-    - [Dual.prototype.div(that)](#dualprototypedivthat)
-    - [Dual.prototype.divide(that)](#dualprototypedividethat)
-    - [Dual.prototype.minus(that)](#dualprototypeminusthat)
-    - [Dual.prototype.mul(that)](#dualprototypemulthat)
-    - [Dual.prototype.multiply(that)](#dualprototypemultiplythat)
-    - [Dual.prototype.plus(that)](#dualprototypeplusthat)
-    - [Dual.prototype.pow(that)](#dualprototypepowthat)
-    - [Dual.prototype.sub(that)](#dualprototypesubthat)
-    - [Dual.prototype.times(that)](#dualprototypetimesthat)
-    - [Dual.prototype.toString()](#dualprototypetostring)
 
-
-# Class NdArray
-Represents a mathematical tensor or array, an algebraic object that describes a (multilinear) relationship between sets of algebraic objects related to a vector space. 
-
-## `NdArray.prototype.add(that)`
+# The Class `NdArray`
+The class `NdArray` can represent tensors.
+## Prototype
+### `add(that)`
 Element-wise addition.
 
-## `NdArray.prototype.constructor(value)`
+#### Example
+```js
+var x0 = new lynx.NdArray([4,5])
+var x1 = new lynx.NdArray([1,2])
+console.log(x0.add(x1).toString()) /*array([5,7])*/
+```
+
+### `constructor(value)`
 The constructor for NdArray. It takes an Array and returns the corresponding NdArray.
+
+#### Example
+```js
+console.log(new lynx.NdArray([1,2,3])) /*array([1,2,3])*/
+```
+
+### `div(that)`
+
+Element-wise division.
+
+#### Example
+```js
+var x0 = new lynx.NdArray([[3,5,3],[5,2,5],[6,1,4]])
+var x1 = new lynx.NdArray([[4,2,5],[5,4,4],[2,4,6]])
+console.log(x0.div(x1).toString()) /*array([[0.75,2.5,0.6],
+    [1,0.5,1.25],
+    [3,0.25,0.6666666666666666]])*/
+```
+
+### `divide(that)`
+Alias for `div`.
+
+### `dot(that)`
+Dot product of two arrays. Currently, it does not support 3D and higher input.
+#### Example
+```js
+var x0 = new lynx.NdArray([2,2,1,6])
+var x1 = new lynx.NdArray([1,5,5,3])
+console.log(x0.dot(x1)) /* 35 */
+```
+
+### `get(..n)`
+Returns the element of an NdArray at a given index. It is 0-based, and accepts negative indices for indexing from the end of the array.
+
+#### Example
+```js
+var x0 = new lynx.NdArray([[5,3],[6,3]])
+console.log(x0.get(-1,0)) /*6*/
+```
+
+### `max()`
+Return the maximum.
+
+#### Example
+```js
+var x0 = new lynx.NdArray([2,6])
+console.log(x0.max()) /*6*/
+```
+

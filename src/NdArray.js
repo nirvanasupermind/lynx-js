@@ -76,9 +76,9 @@ function stringify(value, indent = 4) {
 
     var result = "[" + JSON.stringify(value[0]) + ",";
     for (var i = 1; i < value.length - 1; i++) {
-        result += "\n" + " ".repeat(indent + getArrayDepth(value) + 1) + JSON.stringify(value[i]) + ",";
+        result += "\n" + " ".repeat(indent) + JSON.stringify(value[i]) + ",";
     }
-    result += "\n" + " ".repeat(indent + getArrayDepth(value) + 1) + JSON.stringify(value[value.length - 1])
+    result += "\n" + " ".repeat(indent) + JSON.stringify(value[value.length - 1])
     result += "]";
     return result;
 }
@@ -276,7 +276,7 @@ NdArray.prototype.dot = function (that) {
         return new NdArray(applyScalar((a) => a * that, this.value));
     } else if (this.ndim() === 1 && that.ndim() === 1) { //Vector
         assert(String(this.shape()) === String(that.shape()));
-        return new NdArray(dotproduct(this.value,that.value)) 
+        return dotproduct(this.value,that.value); 
     } else { //Matrix
         assert(this.shape()[0] === that.shape()[1])
         return new NdArray(multiplyMatrices(this.value,that.value));
@@ -285,7 +285,7 @@ NdArray.prototype.dot = function (that) {
 
 
 /**
- * Return the minimum along a given axis.
+ * Return the minimum.
  */
 
 NdArray.prototype.min = function() {
@@ -294,7 +294,7 @@ NdArray.prototype.min = function() {
 
 
 /**
- * Return the maximum along a given axis.
+ * Return the maximum.
  */
 
 NdArray.prototype.max = function() {
