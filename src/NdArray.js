@@ -28,38 +28,38 @@ function dotproduct(a, b) {
 }
 
 function transpose(a) {
-	return a[0].map(function(x,i) {
-		return a.map(function(y,k) {
-			return y[i];
-		})
-	});
+    return a[0].map(function (x, i) {
+        return a.map(function (y, k) {
+            return y[i];
+        })
+    });
 }
 
 //from 
 const multiplyMatrices = (a, b) => {
-   if (!Array.isArray(a) || !Array.isArray(b) || !a.length || !b.length) {
-      throw new Error('arguments should be in 2-dimensional array format');
-   }
-   let x = a.length,
-   z = a[0].length,
-   y = b[0].length;
-//    if (b.length !== z) {
-//       // XxZ & ZxY => XxY
-//       throw new Error('number of columns in the first matrix should be the same as the number of rows in the second');
-//    }
-   let productRow = Array.apply(null, new Array(y)).map(Number.prototype.valueOf, 0);
-   let product = new Array(x);
-   for (let p = 0; p < x; p++) {
-      product[p] = productRow.slice();
-   }
-   for (let i = 0; i < x; i++) {
-      for (let j = 0; j < y; j++) {
-         for (let k = 0; k < z; k++) {
-            product[i][j] += a[i][k] * b[k][j];
-         }
-      }
-   }
-   return product;
+    if (!Array.isArray(a) || !Array.isArray(b) || !a.length || !b.length) {
+        throw new Error('arguments should be in 2-dimensional array format');
+    }
+    let x = a.length,
+        z = a[0].length,
+        y = b[0].length;
+    //    if (b.length !== z) {
+    //       // XxZ & ZxY => XxY
+    //       throw new Error('number of columns in the first matrix should be the same as the number of rows in the second');
+    //    }
+    let productRow = Array.apply(null, new Array(y)).map(Number.prototype.valueOf, 0);
+    let product = new Array(x);
+    for (let p = 0; p < x; p++) {
+        product[p] = productRow.slice();
+    }
+    for (let i = 0; i < x; i++) {
+        for (let j = 0; j < y; j++) {
+            for (let k = 0; k < z; k++) {
+                product[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    return product;
 }
 
 function explode(a, b = 80, c = "\n") {
@@ -83,8 +83,16 @@ function stringify(value, indent = 4) {
     return result;
 }
 
+
+var getStackTrace = function() {
+  var obj = {};
+  Error.captureStackTrace(obj, getStackTrace);
+  return obj.stack;
+};
+
 //Get dimensions of array
 function shape(value) {
+    value = list(value);
     if (type(value) === "Number") {
         //Scalars have a length of 1
         return 1;
@@ -93,14 +101,13 @@ function shape(value) {
     } else if (getArrayDepth(value) === 1) {
         return [value.length];
     } else {
-        //Recursive call
-        return shape(value.map((e) => e[0])).concat(shape(value[0]))
+        return shape(value.map((e) => e[0]).filter((e) => e !== undefined)).concat(shape(value[0]))
     }
 }
 
 //Convert to list/array
 function list(x) {
-    if(type(x) === "NdArray")
+    if (type(x) === "NdArray")
         return x.value
     if (type(x) !== "Array")
         return [x];
@@ -272,14 +279,16 @@ NdArray.prototype.mod = function (that) {
  * Dot product of two arrays. Currently, it does not support 3D and higher input.
  */
 NdArray.prototype.dot = function (that) {
+    if(type(that) !== "Number")
+        that = new NdArray(that);
     if (type(that) === "Number") { //Scalar
         return new NdArray(applyScalar((a) => a * that, this.value));
     } else if (this.ndim() === 1 && that.ndim() === 1) { //Vector
         assert(String(this.shape()) === String(that.shape()));
-        return dotproduct(this.value,that.value); 
+        return dotproduct(this.value, that.value);
     } else { //Matrix
-        assert(this.shape()[0] === that.shape()[1])
-        return new NdArray(multiplyMatrices(this.value,that.value));
+        if(this.shape()[1] && that.shape()[0]) { assert(this.shape()[1] === that.shape()[0]) }
+        return new NdArray(multiplyMatrices(this.value, that.value));
     }
 }
 
@@ -288,7 +297,7 @@ NdArray.prototype.dot = function (that) {
  * Return the minimum.
  */
 
-NdArray.prototype.min = function() {
+NdArray.prototype.min = function () {
     return Math.min(...[].concat.apply([], this.value))
 }
 
@@ -297,7 +306,7 @@ NdArray.prototype.min = function() {
  * Return the maximum.
  */
 
-NdArray.prototype.max = function() {
+NdArray.prototype.max = function () {
     return Math.max(...[].concat.apply([], this.value))
 }
 
@@ -305,7 +314,7 @@ NdArray.prototype.max = function() {
 /**
  * Converts the array to Array.
  */
-NdArray.prototype.tolist = function() {
+NdArray.prototype.tolist = function () {
     return this.value;
 }
 

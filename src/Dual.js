@@ -77,6 +77,7 @@ Dual.prototype.pow = function (that) {
     return Dual._.exp(that.mul(Dual._.ln(this)))
 }
 
+
 Dual.prototype.toString = function () {
     var theSign = (this.b < 0 ? "-" : "+");
     if (this.a === 0)
