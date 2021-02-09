@@ -295,34 +295,6 @@ console.log(lynx.arange(0,10,[0.3,0.3,0.4]).toString()); /*array([0,0.3,0.7,1,1.
 ,7.7,8,8.3,8.7,9,9.3,9.7])*/
 ```
 
-
-## `full(x,fill_value)`
-Return a new NdArray of given shape, filled with fill_value.
-
-### Example
-```js
-console.log(lynx.full([2,2],3));  /*array([[3,3],
-       [3,3]])*/
-```
-
-## `ones(x)`
-Return a new NdArray of given shape, filled with ones. 
-
-### Example
-```js
-console.log(lynx.ones([4])); /*array([1,1,1,1])*/
-```
-
-
-## `zeros(x)`
-Return a new NdArray of given shape, filled with zeros. 
-
-### Example
-```js
-console.log(lynx.zeros([2,3])); /*array([[0,0,0],
-       [0,0,0]])*/
-```
-
 ## `asin(x)`
 Inverse sine. If the input is an array, the function will be performed element-wise.
 ### Example
@@ -358,4 +330,34 @@ Returns ceil of number. If the input is an array, the function will be performed
 var x0 = new lynx.Dual(0.42,0.6)
 console.log(lynx.ceil(x0)) /*1+0E*/
 ```
+
+
+
+## `full(x,fill_value)`
+Return a new NdArray of given shape, filled with fill_value.
+
+### Example
+```js
+console.log(lynx.full([2,2],3));  /*array([[3,3],
+       [3,3]])*/
+```
+
+## `ones(x)`
+Return a new NdArray of given shape, filled with ones. 
+
+### Example
+```js
+console.log(lynx.ones([4])); /*array([1,1,1,1])*/
+```
+
+
+## `zeros(x)`
+Return a new NdArray of given shape, filled with zeros. 
+
+### Example
+```js
+console.log(lynx.zeros([2,3])); /*array([[0,0,0],
+       [0,0,0]])*/
+```
+
 

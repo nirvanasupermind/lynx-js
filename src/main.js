@@ -30,8 +30,8 @@ function root(f) {
     return result;
 }
 //=================
-function rng() { return Math.floor(Math.random() * len * 50) / 50 };
-var len = +new Date() % 3;
+function rng() { return Math.floor(Math.random() * len * 2) / 2 };
+var len = +new Date() % 10;
 var len2 = +new Date() % 6;
 var flipACoin = +new Date() % 5;
 function rand() {
