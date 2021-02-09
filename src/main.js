@@ -8,9 +8,9 @@ var tensorMethods = ["size",
     "ones",
     "full",
     "arange"];
-var method = ""
+var method = "ceil"
 
-console.log(JSON.stringify(Object.getOwnPropertyNames(lynx)));
+console.log(JSON.stringify(Object.getOwnPropertyNames(lynx).sort()));
 console.log("=================")
 
 //=================
@@ -30,8 +30,8 @@ function root(f) {
     return result;
 }
 //=================
-function rng() { return Math.floor(Math.random() * len * 2) / 2 };
-var len = +new Date() % 10;
+function rng() { return Math.floor(Math.random() * len * 50) / 50 };
+var len = +new Date() % 3;
 var len2 = +new Date() % 6;
 var flipACoin = +new Date() % 5;
 function rand() {
@@ -75,4 +75,4 @@ function getExample(theMethod) {
     return code.join("\n");
 }
 
-// console.log(getExample(method));
+console.log(getExample(method));

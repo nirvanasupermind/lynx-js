@@ -271,22 +271,31 @@ var x0 = new lynx.NdArray([[3.5],[1.5]]);
 console.log(lynx.size(x0,0)); /*2*/
 ```
 
-## `zeros(x)`
-Return a new NdArray of given shape, filled with zeros. 
+
+
+
+## `acos(x)`
+
+
+Inverse cosine. If the input is an array, the function will be performed element-wise.
 
 ### Example
 ```js
-console.log(lynx.zeros([2,3])); /*array([[0,0,0],
-       [0,0,0]])*/
+var x0 = new lynx.NdArray([[0],[0.88]])
+console.log(lynx.acos(x0)) /*array([[1.5707963267948966],
+    [0.4949341263408955]])*/
 ```
 
-## `ones(x)`
-Return a new NdArray of given shape, filled with ones. 
+## `arange(x,y,z)`
+Returns an array of evenly spaced values within a given interval. If `z` is an array, the spacings will alternate.
 
 ### Example
 ```js
-console.log(lynx.ones([4])); /*array([1,1,1,1])*/
+console.log(lynx.arange(0,10,[0.3,0.3,0.4]).toString()); /*array([0,0.3,0.7,1,1.3,1.7,2,2.3,2.7,3,3.3,3.7,4,4.3,4.7,5,5.3,5.7,6,6.3,6.7,7,7.3
+,7.7,8,8.3,8.7,9,9.3,9.7])*/
 ```
+
+
 ## `full(x,fill_value)`
 Return a new NdArray of given shape, filled with fill_value.
 
@@ -296,16 +305,57 @@ console.log(lynx.full([2,2],3));  /*array([[3,3],
        [3,3]])*/
 ```
 
-## `acos(x)`
-
-
-Inverse cosine. If the input is an NdArray, the function will be performed element-wise.
+## `ones(x)`
+Return a new NdArray of given shape, filled with ones. 
 
 ### Example
 ```js
-var x0 = new lynx.NdArray([[0],[0.88]])
-console.log(lynx.acos(x0)) /*array([[1.5707963267948966],
-    [0.4949341263408955]])*/
+console.log(lynx.ones([4])); /*array([1,1,1,1])*/
 ```
 
+
+## `zeros(x)`
+Return a new NdArray of given shape, filled with zeros. 
+
+### Example
+```js
+console.log(lynx.zeros([2,3])); /*array([[0,0,0],
+       [0,0,0]])*/
+```
+
+## `asin(x)`
+Inverse sine. If the input is an array, the function will be performed element-wise.
+### Example
+```js
+var x0 = new lynx.NdArray([0.1,0.46,0.74,0.02,0.72])
+console.log(lynx.asin(x0)) /*array([0.1001674211615598,0.4779951985189524,0.833070
+3583416478,0.02000133357339049,0.80380231893303])*/
+```
+
+## `atan(x)`
+Inverse tangent. If the input is an array, the function will be performed element-wise.
+
+### Example
+```js
+var x0 = new lynx.Dual(0.08,0.96)
+console.log(lynx.atan(x0)) /*0.08008558003365901+0.9538950715421303E*/
+```
+
+## `cbrt(x)`
+Returns the cube root. If the input is an array, the function will be performed element-wise.
+
+### Example
+```js
+var x0 = 1.3
+console.log(lynx.cbrt(x0)) /*1.091392883061106*/
+```
+
+## `ceil(x)`
+Returns ceil of number. If the input is an array, the function will be performed element-wise.
+
+### Example
+```js
+var x0 = new lynx.Dual(0.42,0.6)
+console.log(lynx.ceil(x0)) /*1+0E*/
+```
 

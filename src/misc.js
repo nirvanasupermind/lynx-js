@@ -136,7 +136,7 @@ function identity(x) {
     return new NdArray(result);
 }
 /**
- * Computes sine. If the input is an NdArray, the function will be performed element-wise.
+ * Computes sine. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function sin(x) {
@@ -152,7 +152,7 @@ function sin(x) {
 }
 
 /**
- * Computes cosine. If the input is an NdArray, the function will be performed element-wise.
+ * Computes cosine. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function cos(x) {
@@ -169,7 +169,7 @@ function cos(x) {
 
 
 /**
- * Computes tangent. If the input is an NdArray, the function will be performed element-wise.
+ * Computes tangent. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function tan(x) {
@@ -186,7 +186,7 @@ function tan(x) {
 
 
 /**
- * Inverse sine. If the input is an NdArray, the function will be performed element-wise.
+ * Inverse sine. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function asin(x) {
@@ -210,7 +210,7 @@ function asin(x) {
 
 
 /**
- * Inverse cosine. If the input is an NdArray, the function will be performed element-wise.
+ * Inverse cosine. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function acos(x) {
@@ -243,7 +243,7 @@ function acos(x) {
 }
 
 /**
- * Inverse tangent. If the input is an NdArray, the function will be performed element-wise.
+ * Inverse tangent. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function atan(x) {
@@ -261,7 +261,7 @@ function atan(x) {
 
 
 /**
- * Exponential function. If the input is an NdArray, the function will be performed element-wise.
+ * Exponential function. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function exp(x) {
@@ -280,7 +280,7 @@ var exponential = exp;
 
 
 /**
- * Returns the natural logarithm. If the input is an NdArray, the function will be performed element-wise.
+ * Returns the natural logarithm. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function log(x) {
@@ -302,7 +302,7 @@ function _sqrt(n) {
 }
 
 /**
- * Returns the square root. If the input is an NdArray, the function will be performed element-wise.
+ * Returns the square root. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function sqrt(x) {
@@ -319,7 +319,7 @@ function sqrt(x) {
 }
 
 /**
- * Returns the cube root. If the input is an NdArray, the function will be performed element-wise.
+ * Returns the cube root. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function cbrt(x) {
@@ -337,7 +337,7 @@ function cbrt(x) {
 
 
 /**
- * Returns ceil of number. If the input is an NdArray, the function will be performed element-wise.
+ * Returns ceil of number. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function ceil(x) {
@@ -349,13 +349,13 @@ function ceil(x) {
         return new NdArray(applyScalar(Math.ceil, x.value));
     } else { //number
         x = parseFloat(x);
-        return Math.round(x);
+        return Math.ceil(x);
     }
 }
 
 
 /**
- * Returns floor of number. If the input is an NdArray, the function will be performed element-wise.
+ * Returns floor of number. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function floor(x) {
@@ -374,7 +374,7 @@ function floor(x) {
 
 
 /**
- * Returns the rounded number. If the input is an NdArray, the function will be performed element-wise.
+ * Returns the rounded number. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function round(x) {
@@ -436,7 +436,7 @@ function f_lambertw(z, tol) {
 };
 
 /**
- * Applies Lambert W function. If the input is an NdArray, the function will be performed element-wise.
+ * Applies Lambert W function. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function lambertw(x) {
@@ -454,7 +454,7 @@ function lambertw(x) {
 }
 
 /**
- * Factorial. Uses gamma function for non-integers. If the input is an NdArray, the function will be performed element-wise.
+ * Factorial. Uses gamma function for non-integers. If the input is an array, the function will be performed element-wise.
  * @param {*} x 
  */
 function fac(x) {
