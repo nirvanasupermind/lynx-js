@@ -1,6 +1,9 @@
-function int(s) {
-    return { "value": s, "__proto__": Int.prototype };
+function int2(s) {
+    return { "value": s.slice(-Int.BITS), "__proto__": Int.prototype };
 }
+
+var ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
 
 function Int(s, t = 10) {
     if (!(this instanceof Int)) {
@@ -28,6 +31,13 @@ function pad(n, width, z) {
     z = z || '0';
     n = n + '';
     return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
+String.prototype.lpad = function (padString, length) {
+    var str = this;
+    while (str.length < length)
+        str = str + padString;
+    return str;
 }
 
 //Determine if number (as a string) is even
@@ -167,6 +177,32 @@ function modulo(divident, divisor) {
     return cRest;
 }
 
+function binaryAdd(a, b) {
+    var longer = a.length > b.length ? a : b;
+    var shorter = a.length > b.length ? b : a;
+
+    while (shorter.length < longer.length)
+        shorter = "0" + shorter;
+
+    a = longer;
+    b = shorter;
+
+    var carry = '0';
+    var sum = "";
+    for (var i = 0; i < a.length; i++) {
+        var place = a.length - i - 1;
+        var digisum = addDigits(a.charAt(place), b.charAt(place), carry);
+        if (digisum.length != 1)
+            carry = digisum.charAt(0);
+        else
+            carry = '0';
+        sum = digisum.charAt(digisum.length - 1) + sum;
+    }
+
+    // sum = carry + sum;
+    return sum;
+}
+
 //taken from https://codereview.stackexchange.com/questions/92966/multiplying-and-adding-big-numbers-represented-with-strings
 function multiply(a, b) {
     if (parseFloat(a) == 0 || parseFloat(b) == 0) {
@@ -219,6 +255,49 @@ function log(b, z) {
     return i - 1;
 }
 
+function parseBigInt(bigint, base) {
+    //convert bigint string to array of digit values
+    for (var values = [], i = 0; i < bigint.length; i++) {
+        values[i] = parseInt(bigint.charAt(i), base);
+    }
+    return values;
+}
+
+function formatBigInt(values, base) {
+    //convert array of digit values to bigint string
+    for (var bigint = '', i = 0; i < values.length; i++) {
+        bigint += values[i].toString(base);
+    }
+    return bigint;
+}
+
+function convertBase(bigint, inputBase, outputBase) {
+    //takes a bigint string and converts to different base
+    var inputValues = parseBigInt(bigint, inputBase),
+        outputValues = [], //output array, little-endian/lsd order
+        remainder,
+        len = inputValues.length,
+        pos = 0,
+        i;
+    while (pos < len) { //while digits left in input array
+        remainder = 0; //set remainder to 0
+        for (i = pos; i < len; i++) {
+            //long integer division of input values divided by output base
+            //remainder is added to output array
+            remainder = inputValues[i] + remainder * inputBase;
+            inputValues[i] = Math.floor(remainder / outputBase);
+            remainder -= inputValues[i] * outputBase;
+            if (inputValues[i] == 0 && i == pos) {
+                pos++;
+            }
+        }
+        outputValues.push(remainder);
+    }
+    outputValues.reverse(); //transform to big-endian/msd order
+    return formatBigInt(outputValues, outputBase);
+}
+
+
 
 function toBase(num, base) {
     assert(base >= 1 && base <= ALPHABET.length);
@@ -237,6 +316,7 @@ function toBase(num, base) {
 
     return result.map((e) => (e === "" ? "0" : e)).map((e) => ALPHABET[parseFloat(e)]);
 }
+
 
 function sign(x) {
     if (parseFloat(x) < 0) {
@@ -293,7 +373,6 @@ function add(str1, str2) {
 
 
 
-var ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function fromBase(num, base) {
     assert(base >= 1 && base <= ALPHABET.length);
     if (num.charAt(0) === "-")
@@ -330,13 +409,15 @@ function abs(x) {
     return x;
 }
 
+
 function twosComplement(n) {
     if (n.charAt(0) === "-") {
         // console.log(thePower,subtract(thePower, n.slice(1)));
         // console.log(thePower)
-        return  pad(toBase(subtract(thePower,n.slice(1)), 2).join("").slice(-Int.BITS), Int.BITS, "0");
+        return binaryAdd(pad(convertBase(n.slice(1), "10", "2").slice(-Int.BITS), Int.BITS, "0").split("").map((e) => e === "0" ? "1" : "0").join(""), "1").slice(-Int.BITS);
+        // return pad(toBase(subtract(thePower, n.slice(1)), 2).join("").slice(-Int.BITS), Int.BITS, "0");
     } else {
-        return pad(toBase(n, 2).join("").slice(-Int.BITS), Int.BITS, "0");
+        return pad(convertBase(n, "10", 2).slice(-Int.BITS), Int.BITS, "0").slice(-Int.BITS);
     }
 }
 
@@ -380,14 +461,14 @@ Int.prototype.add = function (that) {
 
     // sum = carry + sum;
 
-    return int(sum);
+    return int2(sum);
 }
 
 /**
  * Returns the negated value.
  */
 Int.prototype.neg = function () {
-    return int(this.value.split("").map((e) => e === "0" ? "1" : "0").join("")).add(1);
+    return int2(this.value.split("").map((e) => e === "0" ? "1" : "0").join("")).add(1);
 }
 
 /**
@@ -457,13 +538,11 @@ Int.prototype.pow = function (that) {
         return new Int(0);
     if (this.toNumber() === 1 || this.toNumber() === 0)
         return this;
-    if(this.value.charAt(0) === "1" && that.and(1).compareTo(0) === 0)
+    if (this.value.charAt(0) === "1" && that.and(1).compareTo(0) === 0)
         return this.neg().pow(that);
-    if(this.value.charAt(0) === "1" && that.and(1).compareTo(1) === 0)
+    if (this.value.charAt(0) === "1" && that.and(1).compareTo(1) === 0)
         return this.neg().pow(that).neg();
-    if (Math.pow(this.toNumber(),that.toNumber()) > thePower)
-        return new Int(fastModularExponentiation(this.toNumber(), that.toNumber(), thePower));
-    return new Int(pow(this.toString2(),that.toNumber()));
+    return new Int(pow(this.toString2(), that.toNumber()));
 }
 
 
@@ -477,7 +556,7 @@ Int.prototype.and = function (that) {
         return Number(Boolean(Number(a)) && Boolean(Number(b))) + "";
     }
 
-    return int(this.value.split("").map((num, index) => and(num, that.value.charAt(index))).join(""));
+    return int2(this.value.split("").map((num, index) => and(num, that.value.charAt(index))).join(""));
 }
 
 /**
@@ -489,7 +568,7 @@ Int.prototype.or = function (that) {
         return Number(Boolean(Number(a)) || Boolean(Number(b))) + "";
     }
 
-    return int(this.value.split("").map((num, index) => or(num, that.value.charAt(index))).join(""));
+    return int2(this.value.split("").map((num, index) => or(num, that.value.charAt(index))).join(""));
 }
 
 
@@ -509,7 +588,7 @@ Int.prototype.xor = function (that) {
         return Number(Boolean(Number(a)) !== Boolean(Number(b))) + "";
     }
 
-    return int(this.value.split("").map((num, index) => xor(num, that.value.charAt(index))).join(""));
+    return int2(this.value.split("").map((num, index) => xor(num, that.value.charAt(index))).join(""));
 }
 
 
@@ -524,13 +603,13 @@ Int.prototype.compareTo = function (that) {
 /**
  * Applies square root.
  */
-Int.prototype.sqrt = function() {
-    if(this.compareTo(0) <= 0) {
+Int.prototype.sqrt = function () {
+    if (this.compareTo(0) <= 0) {
         return 0;
     }
 
     var xn = this.div(2);
-    for(var i = 0; i < 100; i++) {
+    for (var i = 0; i < 100; i++) {
         xn = xn.add(this.div(xn)).div(2);
     }
 
@@ -548,14 +627,13 @@ Int.prototype.toString = function (radix = 10) {
     // console.log(this.value);
     if (this.value.charAt(0) === "1" && this.toNumber() !== 0)
         return "-" + this.neg().toString();
-    if (this.toNumber() === 0)
+    if (this.toNumber() === 0 && !this.value.match(/^10*$/g))
         return "0"
-    return toBase(fromBase(this.value, 2), parseFloat(radix)).join("");
+    return convertBase(this.value,2,radix);
 }
 
-Int.prototype.toString2 = function (radix = 10) {
-    // console.log(this.value);
-    return toBase(fromBase(this.value, 2), parseFloat(radix)).join("");
-}
+Int.prototype.toString2 = Int.prototype.toString;
+
+Int._ = { multiply, pow, pad, longDivision };
 
 module.exports = Int;

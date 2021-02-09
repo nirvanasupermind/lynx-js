@@ -3,40 +3,40 @@
 // Usage permitted under terms of MIT License
 
 var lynx = require("./lynx.js");
-var Int = require("./int.js")
-// console.log(lynx.sin(new lynx.Dual(0,1)))
-// console.log(new Int(-1)+"");
+console.log(new lynx._.Int(3).pow(48)+"")
 //=================
-function rng() { return Math.floor(Math.random() * 6) + 1 };
-var len = +new Date() % 6;
-var useMat = +new Date() % 2;
-function randomVector() {
-    var result = [];
-    if (useMat) {
-        for (var i = 0; i < Math.sqrt(len); i++) {
-            result.push([])
-            for (var j = 0; j < Math.sqrt(len); j++) {
-                result[i].push(rng());
-            }
-        }
-        return new lynx.NdArray(result);
-    } else {
-        for (var i = 0; i < len; i++) {
-            result.push(rng());
-        }
+function root(f) {
+    function fDash(x) {
+        var h = 1.5e-8;
+        return (f(x.add(h)).sub(f(x.sub(h)))).div(2*h);
     }
-    return new lynx.NdArray(result);
+    
+
+
+    var result = new lynx.Dual(1);
+    for(var i = 0; i < 75; i++) {
+        result = result.sub(f(result).div(fDash(result)));
+    }
+
+    return result;
+}
+//=================
+function rng() { return Math.floor(Math.random() * len * 2)/2 };
+var len = +new Date() % 13;
+var useMat = +new Date() % 2;
+function randomDual() {
+    return [rng(),rng()];
 }
 
 
 function ndCall(n) {
-    return "new lynx.NdArray(" + JSON.stringify(lynx.NdArray._.list(n)) + ")";
+    return "new lynx.Dual(" + n + ")";
 }
 
 function getExample(method) {
     var examples = [];
     for (var i = 0; i < method.length - 1; i++) {
-        examples.push(randomVector());
+        examples.push(randomDual());
     }
 
     var code = [];
@@ -92,6 +92,6 @@ function pbcopy(data) {
   proc.stdin.end();
 }
 
-console.log(Object.getOwnPropertyNames(lynx.NdArray.prototype).sort())
+console.log(Object.getOwnPropertyNames(lynx.Dual.prototype).sort())
 
-console.log(getExample("shape"));
+console.log(getExample("sub"));

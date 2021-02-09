@@ -4,7 +4,10 @@
 
 
 var NdArray = require("./NdArray.js");
-var Dual = require("./Dual.js")
+var Dual = require("./Dual.js");
+var Int = require("./Int.js");
+// var float = require("./float.js")
+// var Complex = require("./Complex.js")
 var assert = require("assert")
 var type = NdArray._.type;
 var applyScalar = NdArray._.applyScalar;
@@ -190,6 +193,12 @@ function asin(x) {
     if (type(x) === "Dual") { //dual number
         var t1 = 1 / Math.sqrt(1 - (x.a * x.a));
         return new Dual(Math.asin(x.a), x.b * t1);
+
+        if (x.b === 0 && isFinite(asin(x.a)))
+            return new Complex(asin(x.a));
+        var _i = new Complex(0, 1);
+        var t1 = _i.mul(x).add(new Complex(1).sub(x.pow(2)).pow(0.5));
+        return new Complex(Math.atan2(t1.b, t1.a), -Complex._.ln(t1).a);
     } else if (type(x) === "NdArray" || type(x) == "Array") { //array
         x = new NdArray(x);
         return new NdArray(applyScalar(Math.asin, x.value));
@@ -208,6 +217,22 @@ function acos(x) {
     if (type(x) === "Dual") { //dual number
         var t1 = -1 / Math.sqrt(1 - (x.a * x.a));
         return new Dual(Math.asin(x.a), x.b * t1);
+
+        function f(x2) {
+            return cos(x2).sub(x);
+        }
+
+        function fDash(x2) {
+            return sin(x2).mul(-1);
+        }
+
+
+        var result = new Complex(1);
+        for (var i = 0; i < 75; i++) {
+            result = result.sub(f(result).div(fDash(result)));
+        }
+
+        return result;
     } else if (type(x) === "NdArray" || type(x) === "Array") { //array
         x = new NdArray(x);
         return new NdArray(applyScalar(Math.acos, x.value));
@@ -669,49 +694,68 @@ function approx(f, n = 20) {
 }
 
 
-function firstDeriv(f, x, n) {
-    function f_(i, a, h) {
-        return f(a + i * h);
+// function firstDeriv(f, x, n) {
+//     function f_(i, a, h) {
+//         return f(a + i * h);
+//     }
+
+//     //List of finite differences
+
+//     var ders = [
+//         f,
+//         (a, h) => { return ((1) / (5544) * f_(-6, a, h) - (1) / (385) * f_(-5, a, h) + (1) / (56) * f_(-4, a, h) - (5) / (63) * f_(-3, a, h) + (15) / (56) * f_(-2, a, h) - (6) / (7) * f_(-1, a, h) + (6) / (7) * f_(1, a, h) - (15) / (56) * f_(2, a, h) + (5) / (63) * f_(3, a, h) - (1) / (56) * f_(4, a, h) + (1) / (385) * f_(5, a, h) - (1) / (5544) * f_(6, a, h)) / (h ** 1) },
+//         (a, h) => { return (-(1) / (16632) * f_(-6, a, h) + (2) / (1925) * f_(-5, a, h) - (1) / (112) * f_(-4, a, h) + (10) / (189) * f_(-3, a, h) - (15) / (56) * f_(-2, a, h) + (12) / (7) * f_(-1, a, h) - (5369) / (1800) * f_(0, a, h) + (12) / (7) * f_(1, a, h) - (15) / (56) * f_(2, a, h) + (10) / (189) * f_(3, a, h) - (1) / (112) * f_(4, a, h) + (2) / (1925) * f_(5, a, h) - (1) / (16632) * f_(6, a, h)) / (h ** 2) },
+//         (a, h) => { return (-(479) / (302400) * f_(-6, a, h) + (19) / (840) * f_(-5, a, h) - (643) / (4200) * f_(-4, a, h) + (4969) / (7560) * f_(-3, a, h) - (4469) / (2240) * f_(-2, a, h) + (1769) / (700) * f_(-1, a, h) - (1769) / (700) * f_(1, a, h) + (4469) / (2240) * f_(2, a, h) - (4969) / (7560) * f_(3, a, h) + (643) / (4200) * f_(4, a, h) - (19) / (840) * f_(5, a, h) + (479) / (302400) * f_(6, a, h)) / (h ** 3) },
+//         (a, h) => { return ((479) / (453600) * f_(-6, a, h) - (19) / (1050) * f_(-5, a, h) + (643) / (4200) * f_(-4, a, h) - (4969) / (5670) * f_(-3, a, h) + (4469) / (1120) * f_(-2, a, h) - (1769) / (175) * f_(-1, a, h) + (37037) / (2700) * f_(0, a, h) - (1769) / (175) * f_(1, a, h) + (4469) / (1120) * f_(2, a, h) - (4969) / (5670) * f_(3, a, h) + (643) / (4200) * f_(4, a, h) - (19) / (1050) * f_(5, a, h) + (479) / (453600) * f_(6, a, h)) / (h ** 4) },
+//         (a, h) => { return ((139) / (12096) * f_(-6, a, h) - (121) / (756) * f_(-5, a, h) + (3125) / (3024) * f_(-4, a, h) - (3011) / (756) * f_(-3, a, h) + (33853) / (4032) * f_(-2, a, h) - (1039) / (126) * f_(-1, a, h) + (1039) / (126) * f_(1, a, h) - (33853) / (4032) * f_(2, a, h) + (3011) / (756) * f_(3, a, h) - (3125) / (3024) * f_(4, a, h) + (121) / (756) * f_(5, a, h) - (139) / (12096) * f_(6, a, h)) / (h ** 5) },
+//         (a, h) => { return (-(139) / (12096) * f_(-6, a, h) + (121) / (630) * f_(-5, a, h) - (3125) / (2016) * f_(-4, a, h) + (3011) / (378) * f_(-3, a, h) - (33853) / (1344) * f_(-2, a, h) + (1039) / (21) * f_(-1, a, h) - (44473) / (720) * f_(0, a, h) + (1039) / (21) * f_(1, a, h) - (33853) / (1344) * f_(2, a, h) + (3011) / (378) * f_(3, a, h) - (3125) / (2016) * f_(4, a, h) + (121) / (630) * f_(5, a, h) - (139) / (12096) * f_(6, a, h)) / (h ** 6) },
+//         (a, h) => { return (-(31) / (480) * f_(-6, a, h) + (41) / (48) * f_(-5, a, h) - (601) / (120) * f_(-4, a, h) + (755) / (48) * f_(-3, a, h) - (885) / (32) * f_(-2, a, h) + (971) / (40) * f_(-1, a, h) - (971) / (40) * f_(1, a, h) + (885) / (32) * f_(2, a, h) - (755) / (48) * f_(3, a, h) + (601) / (120) * f_(4, a, h) - (41) / (48) * f_(5, a, h) + (31) / (480) * f_(6, a, h)) / (h ** 7) },
+//         (a, h) => { return ((31) / (360) * f_(-6, a, h) - (41) / (30) * f_(-5, a, h) + (601) / (60) * f_(-4, a, h) - (755) / (18) * f_(-3, a, h) + (885) / (8) * f_(-2, a, h) - (971) / (5) * f_(-1, a, h) + (7007) / (30) * f_(0, a, h) - (971) / (5) * f_(1, a, h) + (885) / (8) * f_(2, a, h) - (755) / (18) * f_(3, a, h) + (601) / (60) * f_(4, a, h) - (41) / (30) * f_(5, a, h) + (31) / (360) * f_(6, a, h)) / (h ** 8) },
+//         (a, h) => { return ((1) / (4) * f_(-6, a, h) - 3 * f_(-5, a, h) + 15 * f_(-4, a, h) - 41 * f_(-3, a, h) + (261) / (4) * f_(-2, a, h) - 54 * f_(-1, a, h) + 54 * f_(1, a, h) - (261) / (4) * f_(2, a, h) + 41 * f_(3, a, h) - 15 * f_(4, a, h) + 3 * f_(5, a, h) - (1) / (4) * f_(6, a, h)) / (h ** 9) },
+//     ]
+
+
+
+//     function C(d) {
+//         return ders[n](x, d);
+//     }
+
+//     function D(d) {
+//         return (4 * C(d) - C(2 * d)) / 3;
+//     }
+
+//     function E(d) {
+//         return (16 * D(d) - D(2 * d)) / 15;
+//     }
+
+//     function F(d) {
+//         return (256 * E(d) - E(2 * d)) / 255;
+//     }
+
+//     function G(d) {
+//         return (1024 * F(d) - F(2 * d)) / 1023;
+//     }
+
+//     return G(1.5e-9);
+// }
+
+
+/**
+ * Returns the absolute value of method.
+ * @param {*} x 
+ */
+function abs(x) {
+    if (type(x) === "Dual") { //dual number
+        var h = Math.sqrt(Number.EPSILON);
+        var t1 = (abs(x.a + h) - abs(x.a - h)) / (2 * h); //numerical derivative
+        return new Dual(abs(x.a), x.b * t1);
+    } else if (type(x) === "NdArray" || type(x) == "Array") { //array
+        x = new NdArray(x);
+        return new NdArray(applyScalar(abs, x.value));
+    } else { //number
+        x = parseFloat(x);
+        return Math.abs(x);
     }
-
-    //List of finite differences
-
-    var ders = [
-        f,
-        (a, h) => { return ((1) / (5544) * f_(-6, a, h) - (1) / (385) * f_(-5, a, h) + (1) / (56) * f_(-4, a, h) - (5) / (63) * f_(-3, a, h) + (15) / (56) * f_(-2, a, h) - (6) / (7) * f_(-1, a, h) + (6) / (7) * f_(1, a, h) - (15) / (56) * f_(2, a, h) + (5) / (63) * f_(3, a, h) - (1) / (56) * f_(4, a, h) + (1) / (385) * f_(5, a, h) - (1) / (5544) * f_(6, a, h)) / (h ** 1) },
-        (a, h) => { return (-(1) / (16632) * f_(-6, a, h) + (2) / (1925) * f_(-5, a, h) - (1) / (112) * f_(-4, a, h) + (10) / (189) * f_(-3, a, h) - (15) / (56) * f_(-2, a, h) + (12) / (7) * f_(-1, a, h) - (5369) / (1800) * f_(0, a, h) + (12) / (7) * f_(1, a, h) - (15) / (56) * f_(2, a, h) + (10) / (189) * f_(3, a, h) - (1) / (112) * f_(4, a, h) + (2) / (1925) * f_(5, a, h) - (1) / (16632) * f_(6, a, h)) / (h ** 2) },
-        (a, h) => { return (-(479) / (302400) * f_(-6, a, h) + (19) / (840) * f_(-5, a, h) - (643) / (4200) * f_(-4, a, h) + (4969) / (7560) * f_(-3, a, h) - (4469) / (2240) * f_(-2, a, h) + (1769) / (700) * f_(-1, a, h) - (1769) / (700) * f_(1, a, h) + (4469) / (2240) * f_(2, a, h) - (4969) / (7560) * f_(3, a, h) + (643) / (4200) * f_(4, a, h) - (19) / (840) * f_(5, a, h) + (479) / (302400) * f_(6, a, h)) / (h ** 3) },
-        (a, h) => { return ((479) / (453600) * f_(-6, a, h) - (19) / (1050) * f_(-5, a, h) + (643) / (4200) * f_(-4, a, h) - (4969) / (5670) * f_(-3, a, h) + (4469) / (1120) * f_(-2, a, h) - (1769) / (175) * f_(-1, a, h) + (37037) / (2700) * f_(0, a, h) - (1769) / (175) * f_(1, a, h) + (4469) / (1120) * f_(2, a, h) - (4969) / (5670) * f_(3, a, h) + (643) / (4200) * f_(4, a, h) - (19) / (1050) * f_(5, a, h) + (479) / (453600) * f_(6, a, h)) / (h ** 4) },
-        (a, h) => { return ((139) / (12096) * f_(-6, a, h) - (121) / (756) * f_(-5, a, h) + (3125) / (3024) * f_(-4, a, h) - (3011) / (756) * f_(-3, a, h) + (33853) / (4032) * f_(-2, a, h) - (1039) / (126) * f_(-1, a, h) + (1039) / (126) * f_(1, a, h) - (33853) / (4032) * f_(2, a, h) + (3011) / (756) * f_(3, a, h) - (3125) / (3024) * f_(4, a, h) + (121) / (756) * f_(5, a, h) - (139) / (12096) * f_(6, a, h)) / (h ** 5) },
-        (a, h) => { return (-(139) / (12096) * f_(-6, a, h) + (121) / (630) * f_(-5, a, h) - (3125) / (2016) * f_(-4, a, h) + (3011) / (378) * f_(-3, a, h) - (33853) / (1344) * f_(-2, a, h) + (1039) / (21) * f_(-1, a, h) - (44473) / (720) * f_(0, a, h) + (1039) / (21) * f_(1, a, h) - (33853) / (1344) * f_(2, a, h) + (3011) / (378) * f_(3, a, h) - (3125) / (2016) * f_(4, a, h) + (121) / (630) * f_(5, a, h) - (139) / (12096) * f_(6, a, h)) / (h ** 6) },
-        (a, h) => { return (-(31) / (480) * f_(-6, a, h) + (41) / (48) * f_(-5, a, h) - (601) / (120) * f_(-4, a, h) + (755) / (48) * f_(-3, a, h) - (885) / (32) * f_(-2, a, h) + (971) / (40) * f_(-1, a, h) - (971) / (40) * f_(1, a, h) + (885) / (32) * f_(2, a, h) - (755) / (48) * f_(3, a, h) + (601) / (120) * f_(4, a, h) - (41) / (48) * f_(5, a, h) + (31) / (480) * f_(6, a, h)) / (h ** 7) },
-        (a, h) => { return ((31) / (360) * f_(-6, a, h) - (41) / (30) * f_(-5, a, h) + (601) / (60) * f_(-4, a, h) - (755) / (18) * f_(-3, a, h) + (885) / (8) * f_(-2, a, h) - (971) / (5) * f_(-1, a, h) + (7007) / (30) * f_(0, a, h) - (971) / (5) * f_(1, a, h) + (885) / (8) * f_(2, a, h) - (755) / (18) * f_(3, a, h) + (601) / (60) * f_(4, a, h) - (41) / (30) * f_(5, a, h) + (31) / (360) * f_(6, a, h)) / (h ** 8) },
-        (a, h) => { return ((1) / (4) * f_(-6, a, h) - 3 * f_(-5, a, h) + 15 * f_(-4, a, h) - 41 * f_(-3, a, h) + (261) / (4) * f_(-2, a, h) - 54 * f_(-1, a, h) + 54 * f_(1, a, h) - (261) / (4) * f_(2, a, h) + 41 * f_(3, a, h) - 15 * f_(4, a, h) + 3 * f_(5, a, h) - (1) / (4) * f_(6, a, h)) / (h ** 9) },
-    ]
-
-
-
-    function C(d) {
-        return ders[n](x, d);
-    }
-
-    function D(d) {
-        return (4 * C(d) - C(2 * d)) / 3;
-    }
-
-    function E(d) {
-        return (16 * D(d) - D(2 * d)) / 15;
-    }
-
-    function F(d) {
-        return (256 * E(d) - E(2 * d)) / 255;
-    }
-
-    function G(d) {
-        return (1024 * F(d) - F(2 * d)) / 1023;
-    }
-
-    return G(1.5e-9);
 }
 
 var factorial = fact = fac;
@@ -721,8 +765,11 @@ var _ = new (function () { //private methods
     this.polyfit = polyfit;
     this.polyval = polyval;
     this.sqrtm = sqrtm;
-    this.approx = approx;
-    this.firstDeriv = firstDeriv;
+    // this.approx = approx;
+    this.Int = Int;
+    // this.float = float;
+    // this.Complex = Complex;
+
 })();
 
 module.exports = {
