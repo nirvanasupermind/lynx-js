@@ -175,8 +175,8 @@ var x0 = new lynx.NdArray([1,3,2,6])
 console.log(x0.tolist().toString()) /*1,3,2,6*/
 ```
 
-# The Class `NdArray.prototype.Dual`
-The class `NdArray.prototype.Dual` represents [dual numbers](https://mathworld.wolfram.com/DualNumber.html). 
+# The Class `Dual`
+The class `Dual` represents [dual numbers](https://mathworld.wolfram.com/DualNumber.html). 
 
 ## Prototype
 
