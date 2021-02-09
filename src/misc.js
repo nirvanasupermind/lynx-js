@@ -104,7 +104,7 @@ function full(x, fill_value) {
  * @param {number} [z]
  */
 function arange(x, y, z = 1) {
-    z = NdArray._.list(z)
+    z = NdArray._.list(z);
     var result = new NdArray([]);
     var j = 0;
     for (var i = x; i < y; i = Math.a(i, z[j % z.length])) {

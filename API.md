@@ -261,3 +261,51 @@ console.log(x0.toString()); //1E
 ```
 
 
+# Miscellaneous
+## `size(x,y)`
+Returns the number of elements in an NdArray along a given axis.
+
+### Example
+```js
+var x0 = new lynx.NdArray([[3.5],[1.5]]);
+console.log(lynx.size(x0,0)); /*2*/
+```
+
+## `zeros(x)`
+Return a new NdArray of given shape, filled with zeros. 
+
+### Example
+```js
+console.log(lynx.zeros([2,3])); /*array([[0,0,0],
+       [0,0,0]])*/
+```
+
+## `ones(x)`
+Return a new NdArray of given shape, filled with ones. 
+
+### Example
+```js
+console.log(lynx.ones([4])); /*array([1,1,1,1])*/
+```
+## `full(x,fill_value)`
+Return a new NdArray of given shape, filled with fill_value.
+
+### Example
+```js
+console.log(lynx.full([2,2],3));  /*array([[3,3],
+       [3,3]])*/
+```
+
+## `acos(x)`
+
+
+Inverse cosine. If the input is an NdArray, the function will be performed element-wise.
+
+### Example
+```js
+var x0 = new lynx.NdArray([[0],[0.88]])
+console.log(lynx.acos(x0)) /*array([[1.5707963267948966],
+    [0.4949341263408955]])*/
+```
+
+
