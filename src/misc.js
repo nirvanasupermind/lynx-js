@@ -265,8 +265,9 @@ function atan(x) {
  * @param {*} x 
  */
 function exp(x) {
+
     if (type(x) === "Dual") { //dual number
-        return new Dual(Math.exp(x.a), b * Math.exp(x.a));
+        return Dual._.exp(x);
     } else if (type(x) === "NdArray" || type(x) === "Array") { //array
         x = new NdArray(x);
         return new NdArray(applyScalar(Math.exp, x.value));
@@ -276,7 +277,6 @@ function exp(x) {
     }
 }
 
-var exponential = exp;
 
 
 /**
@@ -364,10 +364,10 @@ function floor(x) {
         return new Dual(Math.floor(x.a), 0);
     } else if (type(x) === "NdArray" || type(x) == "Array") { //array
         x = new NdArray(x);
-        return new NdArray(applyScalar(Math.round, x.value));
+        return new NdArray(applyScalar(Math.floor, x.value));
     } else { //number
         x = parseFloat(x);
-        return Math.round(x);
+        return Math.floor(x);
     }
 }
 
@@ -390,7 +390,6 @@ function round(x) {
     }
 }
 
-var rint = round;
 
 /**
  * Use composite trapezoidal rule with "n" subintervals to compute integral.
@@ -412,7 +411,7 @@ function integral(f, a, b, n = 5000) {
 
 
 
-//from https://github.com/Naruyoko/OmegaNum.js/blob/master/OmegaNum.js
+//taken from https://github.com/Naruyoko/OmegaNum.js/blob/master/OmegaNum.js
 //All of these are from Patashu's break_eternity.js
 var OMEGA = 0.56714329040978387299997;  //W(1,0)
 //from https://math.stackexchange.com/a/465183
@@ -758,8 +757,11 @@ function abs(x) {
     }
 }
 
+//Alias
 var factorial = fact = fac;
 var euler_gamma = 0.5772156649015329;
+var exponential = exp;
+var rint = round;
 
 var _ = new (function () { //private methods
     this.polyfit = polyfit;

@@ -8,7 +8,7 @@ var tensorMethods = ["size",
     "ones",
     "full",
     "arange"];
-var method = "ceil"
+var method = "tan"
 
 console.log(JSON.stringify(Object.getOwnPropertyNames(lynx).sort()));
 console.log("=================")
@@ -30,10 +30,11 @@ function root(f) {
     return result;
 }
 //=================
-function rng() { return Math.floor(Math.random() * len * 2) / 2 };
+function rng() { return flipAnotherCoin() ? Math.floor(Math.random() * len * 2) / 2 - len :  Math.floor(Math.random() * len * 2) / 2};
 var len = +new Date() % 10;
 var len2 = +new Date() % 6;
 var flipACoin = +new Date() % 5;
+var flipAnotherCoin = () => +new Date() % 2;
 function rand() {
     if(tensorMethods.includes(method)) {
         return new lynx.NdArray([new Array(len2).join("a").split("a").map(rng), new Array(len2).join("a").split("a").map(rng)]);
@@ -75,4 +76,7 @@ function getExample(theMethod) {
     return code.join("\n");
 }
 
+
+var x0 = new lynx.NdArray([[0.5,1.5,2],
+    [0.5,2.5,1]]);
 console.log(getExample(method));
