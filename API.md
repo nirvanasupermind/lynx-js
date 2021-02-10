@@ -260,17 +260,6 @@ console.log(x0.toString()); //1E
 
 
 # Miscellaneous
-## `size(x,y)`
-Returns the number of elements in an NdArray along a given axis.
-
-### Example
-```js
-var x0 = new lynx.NdArray([[3.5],[1.5]]);
-console.log(lynx.size(x0,0)); /*2*/
-```
-
-
-
 
 ## `acos(x)`
 
