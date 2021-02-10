@@ -1,5 +1,3 @@
-(WiP)
-
 # The Class `NdArray`
 The class `NdArray` contains useful basic numerical constants and methods for tensors. It can also be used as an efficient multi-dimensional container of generic data.
 
