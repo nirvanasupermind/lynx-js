@@ -278,7 +278,7 @@ console.log(x0.xor(x1).toString()) /*122*/
 
 ## Static
 ### `Int.BITS`
-A property dictating the number of bits an `Int` has. Set to `64` by default.
+A function whose return value dictates the number of bits an `Int` has. Set to `function () { return 64 }` by default.
 
 # The Class `NdArray`
 The class `NdArray` contains useful basic numerical constants and methods for tensors. It can also be used as an efficient multi-dimensional container of generic data.

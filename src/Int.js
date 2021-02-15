@@ -3,7 +3,7 @@
 // Usage permitted under terms of MIT License
 
 function int2(s) {
-    return { "value": s.slice(-Int.BITS), "__proto__": Int.prototype };
+    return { "value": s.slice(-Int.BITS()), "__proto__": Int.prototype };
 }
 
 var ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
@@ -30,9 +30,9 @@ function Int(s, t = 10) {
     }
 }
 
-Int.BITS = 64;
+Int.BITS = () => 64;
 
-var thePower = pow("2", Int.BITS);
+var thePower = pow("2", Int.BITS());
 var assert = require("assert");
 var PAD_DIGITS = 5000;
 
@@ -427,10 +427,10 @@ function twosComplement(n) {
     if (n.charAt(0) === "-") {
         // console.log(thePower,subtract(thePower, n.slice(1)));
         // console.log(thePower)
-        return binaryAdd(pad(convertBase(n.slice(1), "10", "2").slice(-Int.BITS), Int.BITS, "0").split("").map((e) => e === "0" ? "1" : "0").join(""), "1").slice(-Int.BITS);
-        // return pad(toBase(subtract(thePower, n.slice(1)), 2).join("").slice(-Int.BITS), Int.BITS, "0");
+        return binaryAdd(pad(convertBase(n.slice(1), "10", "2").slice(-Int.BITS()), Int.BITS(), "0").split("").map((e) => e === "0" ? "1" : "0").join(""), "1").slice(-Int.BITS());
+        // return pad(toBase(subtract(thePower, n.slice(1)), 2).join("").slice(-Int.BITS()), Int.BITS(), "0");
     } else {
-        return pad(convertBase(n, "10", 2).slice(-Int.BITS), Int.BITS, "0").slice(-Int.BITS);
+        return pad(convertBase(n, "10", 2).slice(-Int.BITS()), Int.BITS(), "0").slice(-Int.BITS());
     }
 }
 
