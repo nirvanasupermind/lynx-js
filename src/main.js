@@ -7,10 +7,14 @@ var tensorMethods = ["size",
     "zeros",
     "ones",
     "full",
+    "sqrtm",
     "arange"];
-var method = "tan"
+var method = "sqrtm"
 
 console.log(JSON.stringify(Object.getOwnPropertyNames(lynx).sort()));
+var x0 = new lynx.NdArray([39,35,22,23])
+var x1 = -1
+console.log(lynx.polyval(x0,x1)) /*NaN*/
 console.log("=================")
 
 //=================
@@ -30,20 +34,22 @@ function root(f) {
     return result;
 }
 //=================
-function rng() { return flipAnotherCoin() ? Math.floor(Math.random() * len * 2) / 2 - len :  Math.floor(Math.random() * len * 2) / 2};
-var len = +new Date() % 10;
+function rng() { return flipAnotherCoin() ? Math.floor(Math.random() * len * 2) / 2 - len :  Math.floor(Math.random() * len * 2)};
+var len = +new Date() % 30;
 var len2 = +new Date() % 6;
+
 var flipACoin = +new Date() % 5;
 var flipAnotherCoin = () => +new Date() % 2;
 function rand() {
     if(tensorMethods.includes(method)) {
         return new lynx.NdArray([new Array(len2).join("a").split("a").map(rng), new Array(len2).join("a").split("a").map(rng)]);
     }
+
     switch(flipACoin) {
         case 0: return new lynx.NdArray(new Array(len2).join("a").split("a").map(rng));
         case 1: return new lynx.Dual(rng(),rng());
-        case 2: return new lynx.NdArray([new Array(len2).join("a").split("a").map(rng), new Array(len2).join("a").split("a").map(rng)]);
-        default: return rng();
+        // case 2: return new lynx.NdArray([new Array(len2).join("a").split("a").map(rng), new Array(len2).join("a").split("a").map(rng)]);
+        default: return new lynx.NdArray(new Array(len2).join("a").split("a").map(rng));
     }
 }
 

@@ -5,6 +5,12 @@
 "use strict";
 
 var assert = require("assert");
+if (!Math.floorMod) {
+    Math.floorMod = function (a, b) {
+        return Math.sign(b) * (Math.abs(a) % Math.abs(b));
+
+    }
+}
 
 //From https://stackoverflow.com/questions/55420156/get-arrays-depth-in-javascript
 function getArrayDepth(value) {
@@ -84,10 +90,10 @@ function stringify(value, indent = 4) {
 }
 
 
-var getStackTrace = function() {
-  var obj = {};
-  Error.captureStackTrace(obj, getStackTrace);
-  return obj.stack;
+var getStackTrace = function () {
+    var obj = {};
+    Error.captureStackTrace(obj, getStackTrace);
+    return obj.stack;
 };
 
 //Get dimensions of array
@@ -276,10 +282,23 @@ NdArray.prototype.mod = function (that) {
 }
 
 /**
+ * Element-wise floor modulo.
+ */
+NdArray.prototype.mod = function (that) {
+    if (type(that) === "Number") { //Scalar
+        return new NdArray(applyScalar((a) => floorMod(a,that), this.value));
+    } else {
+        that = new NdArray(that);
+        return new NdArray(apply(floorMod, this.value, that.value));
+    }
+}
+
+
+/**
  * Dot product of two arrays. Currently, it does not support 3D and higher input.
  */
 NdArray.prototype.dot = function (that) {
-    if(type(that) !== "Number")
+    if (type(that) !== "Number")
         that = new NdArray(that);
     if (type(that) === "Number") { //Scalar
         return new NdArray(applyScalar((a) => a * that, this.value));
@@ -287,7 +306,7 @@ NdArray.prototype.dot = function (that) {
         assert(String(this.shape()) === String(that.shape()));
         return dotproduct(this.value, that.value);
     } else { //Matrix
-        if(this.shape()[1] && that.shape()[0]) { assert(this.shape()[1] === that.shape()[0]) }
+        if (this.shape()[1] && that.shape()[0]) { assert(this.shape()[1] === that.shape()[0]) }
         return new NdArray(multiplyMatrices(this.value, that.value));
     }
 }

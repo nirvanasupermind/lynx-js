@@ -570,11 +570,11 @@ function polyfit(xData, yData, order) {
  * @param {*} poly 
  * @param {number} num 
  */
-function polyval(poly, num) {
+function polyval(poly, x) {
     poly = new NdArray(poly);
     var result = 0;
     for (var i = 0; i < poly.shape(); i++) {
-        result += poly.get(i) * Math.pow(num, i);
+        result += poly.get(i) * Math.pow(x, i);
     }
 
     return result;
@@ -738,8 +738,65 @@ function approx(f, n = 20) {
 //     return G(1.5e-9);
 // }
 
+// Finds primes by Sieve  
+    // of Eratosthenes method 
+    function getPrimes(n) 
+    { 
+        var i, j; 
+        var isPrime = new Array(n + 1); 
+          
+        for(i = 0; i < n + 1; i++) 
+            isPrime[i] = 1; 
+          
+        for (i = 2; i * i <= n; i++) 
+        {      
+            // If isPrime[i] is not  
+            // changed, then it is prime 
+            if (isPrime[i] == 1) 
+            { 
+                // Update all  
+                // multiples of p 
+                for (j = i * 2; j <= n; j += i) 
+                    isPrime[j] = 0; 
+            } 
+        } 
+      
+        // Forming array of the  
+        // prime numbers found 
+        var primes = new Array(); 
+        for (i = 2; i <= n; i++) 
+            if (isPrime[i] == 1) 
+                primes.push(i); 
+        return primes; 
+    } 
+      
+    /**
+     * Checking whether a number is k-rough or not.
+     * @param {number} n 
+     * @param {number} k 
+     */
+    function isRough(n, k) 
+    { 
+        [n,k] = [parseFloat(n),parseFloat(k)];
+        var primes = getPrimes(n); 
+          
+        // Finding minimum 
+        // prime factor of n 
+        var min_pf = n; 
+        for (var i = 0; i < primes.length; i++) 
+            if (n % primes[i] == 0) 
+                min_pf = primes[i];
+      
+        // Return true if minimum  
+        // prime factor is greater 
+        // than or equal to k. Else 
+        // return false. 
+        return (min_pf >= k); 
+    } 
+     
 
 /**
+ * 
  * Returns the absolute value of method.
  * @param {*} x 
  */
@@ -756,6 +813,7 @@ function abs(x) {
         return Math.abs(x);
     }
 }
+
 
 //Alias
 var factorial = fact = fac;
@@ -774,8 +832,7 @@ var _ = new (function () { //private methods
 
 })();
 
-module.exports = {
-    _,
+Object.assign(_,{
     size,
     zeros,
     ones,
@@ -802,5 +859,9 @@ module.exports = {
     fac,
     fact,
     factorial,
-    identity
-};
+    identity,
+    isRough
+});
+
+
+module.exports = _;

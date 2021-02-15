@@ -1,27 +1,36 @@
+// lynx Library
+// Copyright (c) nirvanasupermind
+// Usage permitted under terms of MIT License
+
 function int2(s) {
     return { "value": s.slice(-Int.BITS), "__proto__": Int.prototype };
 }
 
 var ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
-
+/**
+ * The constructor for Int.
+ * @param {*} s 
+ * @param {*} t 
+ */
 function Int(s, t = 10) {
+    t = parseFloat(t);
     if (!(this instanceof Int)) {
         return new Int(s);
     } else if (s instanceof Int) {
         //Clone
         this.value = s.value;
     } else {
-        if (typeof s === "number")
-            s = Math.floor(s);
+        if (typeof s !== "string")
+            s = Math.floor(parseFloat(s));
 
-        s = s.toString()
+        s = String(s);
         s = fromBase(s, t);
         this.value = twosComplement(s.toString());
     }
 }
 
-Int.BITS = 48;
+Int.BITS = 64;
 
 var thePower = pow("2", Int.BITS);
 var assert = require("assert");
@@ -174,6 +183,7 @@ function modulo(divident, divisor) {
     if (cRest == '') {
         cRest = 0;
     }
+
     return cRest;
 }
 
@@ -298,6 +308,9 @@ function convertBase(bigint, inputBase, outputBase) {
 }
 
 
+function myModulo(a,b) {
+return subtract(a,multiply(longDivision(a,b),b));
+}
 
 function toBase(num, base) {
     assert(base >= 1 && base <= ALPHABET.length);
@@ -421,6 +434,16 @@ function twosComplement(n) {
     }
 }
 
+function fromBinary(n) {
+    var result = "0";
+    for(var i = 0; i < n.length; i++) {
+        if(n.charAt(i) === "1")
+            result = add(result,multiply(n.charAt(i),pow("2",n.length-i-1)));
+    }
+
+    return result;
+    
+}
 
 function eq(a, b) {
     return compareTo(a, b) === 0;
@@ -479,14 +502,53 @@ Int.prototype.sub = function (that) {
     return this.add(that.neg());
 }
 
+function applySign(a,b) {
+    if(a === 1)
+        return b;
+    return b.neg();
+
+
+}
+
+
 /**
  * Multiplication.
  */
 Int.prototype.mul = function (that) {
     that = new Int(that);
-    return new Int(multiply(this.toString2(), that.toString2()));
+    var sign1 = sign(this.toNumber());
+    var sign2 = sign(that.toNumber());
+    return new Int(applySign(sign1*sign2,multiply(this.abs().toString2(), that.abs().toString2())));
 }
 
+/**
+ * Returns the modulo, using the sign of the dividend.
+ */
+Int.prototype.mod = function (that) {
+    that = new Int(that);
+    var sign1 = sign(this.toNumber());
+    var sign2 = sign(that.toNumber());
+    return new Int(applySign(sign1,new Int(myModulo(this.abs().toString2(), that.abs().toString2()))));
+}
+
+/**
+ * Returns the modulo, using the sign of the divisor.
+ */
+Int.prototype.floorMod = function(that) {
+that = new Int(that);
+    var sign1 = sign(this.toNumber());
+    var sign2 = sign(that.toNumber());
+    return new Int(applySign(sign2,new Int(myModulo(this.abs().toString2(), that.abs().toString2()))));
+}
+
+/**
+ * Returns the absolute value of method.
+ */
+Int.prototype.abs = function() {
+    if(this.compareTo(0) < 0)
+        return this.neg();
+    return this;
+}
 
 /**
  * Division.
@@ -503,6 +565,7 @@ Int.prototype.div = function (that) {
 
     return new Int(longDivision(this.toString(), that.toString()));
 }
+
 
 
 /**
@@ -616,23 +679,31 @@ Int.prototype.sqrt = function () {
     return xn;
 }
 
+
 /**
  * Converts the number to Number.
  */
 Int.prototype.toNumber = function () {
+    if(this.value.charAt(0) === "1")
+        return -parseInt(this.neg().value.substr(1), 2);
     return parseInt(this.value.substr(1), 2);
 }
 
 Int.prototype.toString = function (radix = 10) {
-    // console.log(this.value);
-    if (this.value.charAt(0) === "1" && this.toNumber() !== 0)
-        return "-" + this.neg().toString();
-    if (this.toNumber() === 0 && !this.value.match(/^10*$/g))
-        return "0"
-    return convertBase(this.value,2,radix);
+    if(this.value.charAt(0) === "1") {
+        return "-"+fromBinary(this.neg().value);
+    } else {
+    return fromBinary(this.value);
+    }
 }
 
 Int.prototype.toString2 = Int.prototype.toString;
+
+Int.prototype.plus = Int.prototype.add;
+Int.prototype.minus = Int.prototype.sub;
+Int.prototype.times = Int.prototype.multiply = Int.prototype.mul;
+Int.prototype.divide = Int.prototype.div;
+Int.prototype.modular = Int.prototype.mod;
 
 Int._ = { multiply, pow, pad, longDivision };
 
