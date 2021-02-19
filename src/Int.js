@@ -503,10 +503,11 @@ function int(_bits) {
         return this.add(that.neg());
     }
 
+    
     function applySign(a, b) {
         if (a === 1)
             return b;
-        return b.neg();
+        return (b.charAt(0) === "-" ? b.slice(1) : "-"+b);
 
 
     }
