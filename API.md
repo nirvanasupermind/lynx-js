@@ -585,6 +585,16 @@ console.log(lynx.full([2,2],3));  /*array([[3,3],
        [3,3]])*/
 ```
 
+## `hilbert(n)`
+Create a Hilbert matrix of order n.
+
+### Example
+```js
+console.log(lynx.hilbert(3).toString()); /*array([[1,0.5,0.3333333333333333],
+    [0.5,0.3333333333333333,0.25],
+    [0.3333333333333333,0.25,0.2]])*/
+```
+
 ## `identity(x)`
 Return the identity array. The identity array is a square array with ones on the main diagonal.
 

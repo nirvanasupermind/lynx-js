@@ -11,7 +11,7 @@ var tensorMethods = ["size",
     "arange"];
 var method = "sqrtm"
 
-console.log(JSON.stringify(Object.getOwnPropertyNames(lynx).sort()));
+console.log(lynx.hilbert(3)+"");
 var x0 = new lynx.NdArray([39,35,22,23])
 var x1 = -1
 console.log(lynx.polyval(x0,x1)) /*NaN*/
@@ -85,4 +85,4 @@ function getExample(theMethod) {
 
 var x0 = new lynx.NdArray([[0.5,1.5,2],
     [0.5,2.5,1]]);
-console.log(getExample(method));
+// console.log(getExample(method));
