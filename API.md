@@ -85,7 +85,7 @@ console.log(x0.toString()); //1E
 
 # Class `Int`
 By default, the `Int` data type is a 64-bit signed two's complement integer,which has a minimum value of -2^63 and a maximum value of 2^63-1. However, it's number of bits can be customized using the `Int.BITS` property. 
-<br>
+<br><br>
 The `Int` class can be used to represent large integers that would loose precision when using JavaScript's built-in `Number` type.
 
 ## Prototype
