@@ -1,4 +1,4 @@
-# The Class `Dual`
+# Class `Dual`
 The class `Dual` represents [dual numbers](https://mathworld.wolfram.com/DualNumber.html). 
 
 ## Prototype
@@ -83,8 +83,10 @@ var x0 = new lynx.Dual(0,1);
 console.log(x0.toString()); //1E
 ```
 
-# The Class `Int`
-By default, the `Int` data type is a 64-bit signed two's complement integer,which has a minimum value of -2^63 and a maximum value of 2^63-1. However, it's number of bits can be customized using the `Int.BITS` property. The `Int` class can be used to represent large integers that would loose precision when using JavaScript's built-in `Number` type.
+# Class `Int`
+By default, the `Int` data type is a 64-bit signed two's complement integer,which has a minimum value of -2^63 and a maximum value of 2^63-1. However, it's number of bits can be customized using the `Int.BITS` property. 
+<br>
+The `Int` class can be used to represent large integers that would loose precision when using JavaScript's built-in `Number` type.
 
 ## Prototype
 ### `abs()`
@@ -278,9 +280,9 @@ console.log(x0.xor(x1).toString()) /*122*/
 
 ## Static
 ### `Int.BITS`
-A function whose return value dictates the number of bits an `Int` has. Set to `function () { return 64 }` by default.
+Constant which dictates the number of bits an `Int` has. Set to 64 by default.
 
-# The Class `NdArray`
+# Class `NdArray`
 The class `NdArray` contains useful basic numerical constants and methods for tensors. It can also be used as an efficient multi-dimensional container of generic data.
 
 ## Prototype
@@ -469,7 +471,16 @@ console.log(x0.tolist().toString()) /*1,3,2,6*/
 ```
 
 
-# Miscellaneous
+# Object `random`
+Module to work with random numbers.
+## `rand(shape)`
+Random values in a given shape.
+### Example
+```js
+console.log(lynx.random.rand(3).toString()); /* array([0.7210258844645252,0.16421554060764953,0.48269974665264703]) */
+```
+
+# Other
 
 ## `acos(x)`
 
