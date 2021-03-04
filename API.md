@@ -480,6 +480,13 @@ Random values in a given shape.
 console.log(lynx.random.rand(3).toString()); /* array([0.7210258844645252,0.16421554060764953,0.48269974665264703]) */
 ```
 
+## `gaussianRand()`
+Approximately gaussian random numbers between 0 and 1.
+### Example
+```js
+console.log(lynx.random.gaussianRand().toString()) /* 0.505949518246893 */
+
+
 # Other
 
 ## `acos(x)`
