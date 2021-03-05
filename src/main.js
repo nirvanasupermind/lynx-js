@@ -11,10 +11,10 @@ var tensorMethods = ["size",
     "arange"];
 var method = "sqrtm"
 
-console.log(lynx.random.gaussianRand().toString());
-var x0 = new lynx.NdArray([39,35,22,23])
+var x0 = new lynx.NdArray([[1,2,3]])
+console.log(x0.get(0));
 var x1 = -1
-console.log(lynx.polyval(x0,x1)) /*NaN*/
+// console.log(lynx.polyval(x0,x1)) /*NaN*/
 console.log("=================")
 
 //=================
