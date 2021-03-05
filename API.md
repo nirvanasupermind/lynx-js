@@ -485,12 +485,11 @@ Approximately gaussian random numbers between 0 and 1.
 ### Example
 ```js
 console.log(lynx.random.gaussianRand().toString()) /* 0.505949518246893 */
-
+```
 
 # Other
 
 ## `acos(x)`
-
 
 Inverse cosine. If the input is an array, the function will be performed element-wise.
 
