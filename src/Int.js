@@ -16,7 +16,9 @@ function int(_bits) {
      */
     function Int(s, t = 10) {
         t = parseFloat(t);
-        if (!(this instanceof Int)) {
+        if(Number.isNaN(parseFloat(s))) {
+            throw new Error("invalid literal for Int: "+s);
+        } else if (!(this instanceof Int)) {
             return new Int(s);
         } else if (s instanceof Int) {
             //Clone

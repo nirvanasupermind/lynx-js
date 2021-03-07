@@ -12,9 +12,10 @@ var tensorMethods = ["size",
 var method = "sqrtm"
 
 var x0 = new lynx.NdArray([[1,2,3]])
-console.log(x0.get(0));
-var x1 = -1
-// console.log(lynx.polyval(x0,x1)) /*NaN*/
+// console.log(new lynx.Int("2").add(new lynx.Int("3")))
+// console.log(x0.get(0));
+// var x1 = -1
+// // console.log(lynx.polyval(x0,x1)) /*NaN*/
 console.log("=================")
 
 //=================
