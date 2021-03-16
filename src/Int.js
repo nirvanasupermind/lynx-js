@@ -16,7 +16,7 @@ function int(_bits) {
      */
     function Int(s, t = 10) {
         t = parseFloat(t);
-        if(Number.isNaN(parseFloat(s.trim())) && (s.trim() !== "")) {
+        if(Number.isNaN(parseFloat((""+s).trim())) && ((""+s).trim() !== "")) {
             throw new Error("invalid literal for Int: "+s);
         } else if (!(this instanceof Int)) {
             return new Int(s);
